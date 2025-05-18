@@ -14,7 +14,8 @@ typedef struct {
 } kritic_timer_t;
 
 #else // POSIX
-typedef struct {
+typedef struct
+{
     uint64_t start_sec;
     uint64_t start_nsec;
 } kritic_timer_t;

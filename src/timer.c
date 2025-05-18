@@ -24,25 +24,28 @@ uint64_t kritic_timer_elapsed(const kritic_timer_t* timer) {
 #else // POSIX
 #include <time.h>
 
-void kritic_timer_start(kritic_timer_t* timer) {
+void kritic_timer_start(kritic_timer_t* timer)
+{
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
-    timer->start_sec = (uint64_t) ts.tv_sec;
-    timer->start_nsec = (uint64_t) ts.tv_nsec;
+    timer->start_sec = (uint64_t)ts.tv_sec;
+    timer->start_nsec = (uint64_t)ts.tv_nsec;
 }
 
-uint64_t kritic_timer_elapsed(const kritic_timer_t* timer) {
+uint64_t kritic_timer_elapsed(const kritic_timer_t* timer)
+{
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
 
-    int64_t sec_diff = (int64_t)ts.tv_sec - (int64_t) timer->start_sec;
-    int64_t nsec_diff = (int64_t)ts.tv_nsec - (int64_t) timer->start_nsec;
+    int64_t sec_diff = (int64_t)ts.tv_sec - (int64_t)timer->start_sec;
+    int64_t nsec_diff = (int64_t)ts.tv_nsec - (int64_t)timer->start_nsec;
 
-    if (nsec_diff < 0) {
+    if (nsec_diff < 0)
+    {
         sec_diff -= 1;
         nsec_diff += 1000000000L;
     }
 
-    return (uint64_t) (sec_diff * 1000000000L + nsec_diff);
+    return (uint64_t)(sec_diff * 1000000000L + nsec_diff);
 }
 #endif // POSIX

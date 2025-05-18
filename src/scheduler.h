@@ -11,14 +11,16 @@ struct kritic_runtime_t;
 struct kritic_attribute_t;
 typedef void (*kritic_test_fn)(void);
 
-typedef struct kritic_test_index_t {
+typedef struct kritic_test_index_t
+{
     const char* suite;
     const char* name;
     size_t index;
 } kritic_test_index_t;
 
 
-typedef struct kritic_test_t {
+typedef struct kritic_test_t
+{
     const char* file;
     const char* suite;
     const char* name;
@@ -27,14 +29,16 @@ typedef struct kritic_test_t {
     kritic_test_index_t* dependencies[KRITIC_MAX_DEPENDENCIES];
 } kritic_test_t;
 
-typedef struct {
+typedef struct
+{
     const char* file;
     const char* suite;
     const char* test;
     const int line;
 } kritic_context_t;
 
-typedef struct kritic_linkedlist_node {
+typedef struct kritic_linkedlist_node
+{
     struct kritic_linkedlist_node* node;
     void* data;
 } kritic_node_t;

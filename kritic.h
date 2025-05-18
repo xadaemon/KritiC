@@ -2,13 +2,10 @@
 #define KRITIC_CORE_H
 
 #include <stdbool.h>
-#include <stddef.h>
 #include <stdint.h>
-#include <string.h>
 
 #include "src/redirect.h"
 #include "src/timer.h"
-#include "src/attributes.h"
 #include "src/scheduler.h"
 
 #define KRITIC_VERSION_MAJOR 1
@@ -23,7 +20,8 @@ extern "C" {
 #endif
 
 /* Structs, types, and enums */
-typedef enum {
+typedef enum
+{
     KRITIC_ASSERT_UNKNOWN = 0,
     KRITIC_ASSERT,
     KRITIC_ASSERT_NOT,
@@ -39,8 +37,8 @@ typedef enum {
 typedef void (*kritic_assert_printer_fn)(
     const kritic_context_t* ctx,
     bool passed,
-    long long actual,
-    long long expected,
+    uint64_t actual,
+    uint64_t expected,
     const char* actual_expr,
     const char* expected_expr,
     kritic_assert_type_t assert_type
@@ -53,7 +51,8 @@ typedef void (*kritic_post_test_printer_fn)(kritic_runtime_t* state);
 typedef void (*kritic_stdout_printer_fn)(kritic_runtime_t* _, kritic_redirect_ctx_t* redir_ctx);
 typedef void (*kritic_skip_printer_fn)(kritic_runtime_t* state, const kritic_context_t* ctx);
 
-typedef struct {
+typedef struct
+{
     const kritic_test_t* test;
     int asserts_failed;
     int assert_count;
@@ -63,7 +62,8 @@ typedef struct {
     kritic_timer_t timer;
 } kritic_test_state_t;
 
-typedef struct {
+typedef struct
+{
     kritic_assert_printer_fn assert_printer;
     kritic_pre_test_printer_fn pre_test_printer;
     kritic_post_test_printer_fn post_test_printer;
@@ -74,7 +74,8 @@ typedef struct {
 } kritic_printers_t;
 
 // Globals struct
-struct kritic_runtime_t {
+struct kritic_runtime_t
+{
     // Struct of printer functions
     kritic_printers_t printers;
     // Number of registered tests
@@ -106,8 +107,8 @@ void kritic_noop(void* _, ...);
 int kritic_run_all(void);
 void kritic_assert_eq(
     const kritic_context_t* ctx,
-    long long actual,
-    long long expected,
+    uint64_t actual,
+    uint64_t expected,
     const char* actual_expr,
     const char* expected_expr,
     const kritic_assert_type_t assert_type
@@ -117,8 +118,8 @@ kritic_runtime_t* kritic_get_runtime_state(void);
 void kritic_default_assert_printer(
     const kritic_context_t* ctx,
     bool passed,
-    long long actual,
-    long long expected,
+    uint64_t actual,
+    uint64_t expected,
     const char* actual_expr,
     const char* expected_expr,
     kritic_assert_type_t assert_type
@@ -136,13 +137,13 @@ void kritic_default_skip_printer(kritic_runtime_t* state, const kritic_context_t
     /* Wrapper for Windows-specific kritic_enable_ansi_() */
     #define kritic_enable_ansi() kritic_enable_ansi_()
 #else // POSIX
-    #include <unistd.h>
+#include <unistd.h>
 
-    /* Aliases */
-    #define _write  write
+/* Aliases */
+#define _write  write
 
-    /* Wrapper for Windows-specific kritic_enable_ansi_() */
-    #define kritic_enable_ansi()
+/* Wrapper for Windows-specific kritic_enable_ansi_() */
+#define kritic_enable_ansi()
 
 #endif // POSIX
 
@@ -155,7 +156,7 @@ void kritic_default_skip_printer(kritic_runtime_t* state, const kritic_context_t
 #define PP_NARG_(_, ...) PP_ARG_N(__VA_ARGS__)
 
 #define PP_ARG_N( \
-     _1, _2, _3, _4, _5, _6, _7, _8, _9,_10, \
+    _1, _2, _3, _4, _5, _6, _7, _8, _9,_10, \
     _11,_12,_13,_14,_15,_16,_17,_18,_19,_20, \
     _21,_22,_23,_24,_25,_26,_27,_28,_29,_30, \
     _31,_32,_33,_34,_35,_36,_37,_38,_39,_40, \
@@ -234,18 +235,18 @@ static void KRITIC_TEST_NAME(suite, name)(void);                                
             __builtin_types_compatible_p(__typeof__(_a), const char[]) ||                                     \
             __builtin_types_compatible_p(__typeof__(_a), char[])                                              \
         ) {                                                                                                   \
-            kritic_assert_eq(&ctx, (long long)(uintptr_t) _a, (long long)(uintptr_t) _b,                      \
+            kritic_assert_eq(&ctx, (uint64_t)(uintptr_t) _a, (uint64_t)(uintptr_t) _b,                      \
                 #actual, #expected, KRITIC_ASSERT_EQ_STR);                                                    \
         } else if (                                                                                           \
             __builtin_types_compatible_p(__typeof__(_a), float) ||                                            \
             __builtin_types_compatible_p(__typeof__(_a), double)                                              \
         ) {                                                                                                   \
-            long long _a_bits, _b_bits;                                                                       \
+            uint64_t _a_bits, _b_bits;                                                                       \
             memcpy(&_a_bits, &_a, sizeof(_a));                                                                \
             memcpy(&_b_bits, &_b, sizeof(_b));                                                                \
             kritic_assert_eq(&ctx, _a_bits, _b_bits, #actual, #expected, KRITIC_ASSERT_EQ_FLOAT);             \
         } else {                                                                                              \
-            kritic_assert_eq(&ctx, (long long) _a, (long long) _b, #actual, #expected,                        \
+            kritic_assert_eq(&ctx, (uint64_t) _a, (uint64_t) _b, #actual, #expected,                        \
                 KRITIC_ASSERT_EQ_INT);                                                                        \
         }                                                                                                     \
     } while (0);
@@ -263,7 +264,7 @@ static void KRITIC_TEST_NAME(suite, name)(void);                                
         kritic_context_t ctx = {__FILE__, KRITIC_GET_CURRENT_SUITE(), KRITIC_GET_CURRENT_TEST(), __LINE__};   \
         double actual_val = (actual);                                                                         \
         double expected_val = (expected);                                                                     \
-        kritic_assert_eq(&ctx, *(long long*)&actual_val, *(long long*)&expected_val, #actual, #expected,      \
+        kritic_assert_eq(&ctx, *(uint64_t*)&actual_val, *(uint64_t*)&expected_val, #actual, #expected,      \
             KRITIC_ASSERT_EQ_FLOAT);                                                                          \
     } while (0);
 
@@ -271,7 +272,7 @@ static void KRITIC_TEST_NAME(suite, name)(void);                                
 #define KRITIC_ASSERT_EQ_STR(actual, expected) \
     do {                                                                                                      \
         kritic_context_t ctx = {__FILE__, KRITIC_GET_CURRENT_SUITE(), KRITIC_GET_CURRENT_TEST(), __LINE__};   \
-        kritic_assert_eq(&ctx, (long long)(uintptr_t)(actual), (long long)(uintptr_t)(expected), #actual,     \
+        kritic_assert_eq(&ctx, (uint64_t)(uintptr_t)(actual), (uint64_t)(uintptr_t)(expected), #actual,     \
             #expected, KRITIC_ASSERT_EQ_STR);                                                                 \
     } while (0);
 
@@ -287,18 +288,18 @@ static void KRITIC_TEST_NAME(suite, name)(void);                                
             __builtin_types_compatible_p(__typeof__(_a), const char[]) ||                                     \
             __builtin_types_compatible_p(__typeof__(_a), char[])                                              \
         ) {                                                                                                   \
-            kritic_assert_eq(&ctx, (long long)(uintptr_t) _a, (long long)(uintptr_t) _b,                      \
+            kritic_assert_eq(&ctx, (uint64_t)(uintptr_t) _a, (uint64_t)(uintptr_t) _b,                      \
                 #actual, #expected, KRITIC_ASSERT_NE_STR);                                                    \
         } else if (                                                                                           \
             __builtin_types_compatible_p(__typeof__(_a), float) ||                                            \
             __builtin_types_compatible_p(__typeof__(_a), double)                                              \
         ) {                                                                                                   \
-            long long _a_bits, _b_bits;                                                                       \
+            uint64_t _a_bits, _b_bits;                                                                       \
             memcpy(&_a_bits, &_a, sizeof(_a));                                                                \
             memcpy(&_b_bits, &_b, sizeof(_b));                                                                \
             kritic_assert_eq(&ctx, _a_bits, _b_bits, #actual, #expected, KRITIC_ASSERT_NE_FLOAT);             \
         } else {                                                                                              \
-            kritic_assert_eq(&ctx, (long long) _a, (long long) _b, #actual, #expected,                        \
+            kritic_assert_eq(&ctx, (uint64_t) _a, (uint64_t) _b, #actual, #expected,                        \
                 KRITIC_ASSERT_NE_INT);                                                                        \
         }                                                                                                     \
     } while (0);
@@ -316,7 +317,7 @@ static void KRITIC_TEST_NAME(suite, name)(void);                                
         kritic_context_t ctx = {__FILE__, KRITIC_GET_CURRENT_SUITE(), KRITIC_GET_CURRENT_TEST(), __LINE__};   \
         double actual_val = (actual);                                                                         \
         double expected_val = (expected);                                                                     \
-        kritic_assert_eq(&ctx, *(long long*)&actual_val, *(long long*)&expected_val, #actual, #expected,      \
+        kritic_assert_eq(&ctx, *(uint64_t*)&actual_val, *(uint64_t*)&expected_val, #actual, #expected,      \
             KRITIC_ASSERT_NE_FLOAT);                                                                          \
     } while (0);
 
@@ -324,7 +325,7 @@ static void KRITIC_TEST_NAME(suite, name)(void);                                
 #define KRITIC_ASSERT_NE_STR(actual, expected) \
     do {                                                                                                      \
         kritic_context_t ctx = {__FILE__, KRITIC_GET_CURRENT_SUITE(), KRITIC_GET_CURRENT_TEST(), __LINE__};   \
-        kritic_assert_eq(&ctx, (long long)(uintptr_t)(actual), (long long)(uintptr_t)(expected), #actual,     \
+        kritic_assert_eq(&ctx, (uint64_t)(uintptr_t)(actual), (uint64_t)(uintptr_t)(expected), #actual,     \
             #expected, KRITIC_ASSERT_NE_STR);                                                                 \
     } while (0);
 

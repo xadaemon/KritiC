@@ -8,21 +8,25 @@ extern "C" {
 struct kritic_test_t;
 struct kritic_test_index_t;
 
-typedef enum {
+typedef enum
+{
     KRITIC_ATTR_UNKNOWN = 0,
     KRITIC_ATTR_DEPENDS_ON
 } kritic_attr_type_t;
 
-typedef struct {
+typedef struct
+{
     const char* suite;
     const char* test;
 } kritic_attr_depends_on_t;
 
-typedef union {
+typedef union
+{
     kritic_attr_depends_on_t depends_on;
 } kritic_attr_union;
 
-typedef struct kritic_attribute_t {
+typedef struct kritic_attribute_t
+{
     kritic_attr_type_t type;
     kritic_attr_union attribute;
 } kritic_attribute_t;

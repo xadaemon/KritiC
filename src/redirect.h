@@ -13,7 +13,8 @@ extern "C" {
 
 typedef struct kritic_runtime_t kritic_runtime_t;
 
-typedef struct {
+typedef struct
+{
     int stdout_copy;
     char* string;
     uint32_t length;
@@ -49,7 +50,8 @@ typedef struct {
 #define _fileno fileno
 #define _read   read
 
-typedef struct {
+typedef struct
+{
     pthread_t thread;
     pthread_mutex_t lock;
     pthread_cond_t cond_start;
