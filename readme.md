@@ -34,8 +34,8 @@ KRITIC_TEST(math, subtraction) {
 - Make assertions:
   - `KRITIC_ASSERT(expr)`: asserts that `expr` is true
   - `KRITIC_ASSERT_NOT(expr)`: asserts that `expr` is false
-  - `KRITIC_ASSERT_EQ(x, y)`: asserts that `x` equals `y` (generic: supports `int`, `uint64_t`, `float`, `double`, and `const char*`)
-  - `KRITIC_ASSERT_NE(x, y)`: asserts that `x` does not equal `y` (generic: supports `int`, `uint64_t`, `float`, `double`, and `const char*`)
+  - `KRITIC_ASSERT_EQ(x, y)`: asserts that `x` equals `y` (generic: supports `int`, `int64_t`, `float`, `double`, and `const char*`)
+  - `KRITIC_ASSERT_NE(x, y)`: asserts that `x` does not equal `y` (generic: supports `int`, `int64_t`, `float`, `double`, and `const char*`)
   - `KRITIC_ASSERT_EQ_INT(x, y)`: asserts that `x` and `y` are equal using integer comparison  
   - `KRITIC_ASSERT_NE_INT(x, y)`: asserts that `x` and `y` are not equal using integer comparison  
   - `KRITIC_ASSERT_EQ_FLOAT(x, y)`: asserts that `x` and `y` are approximately equal using float/double comparison (with delta tolerance)  
@@ -76,4 +76,10 @@ KRITIC_TEST(hello, world) {
 
 ```sh
 clang -Iextern/kritic -o tests tests.c extern/kritic/build/libkritic.a
+```
+
+### Using kritiC without threading support
+
+```sh
+make -D KRITIC_NO_STDOUT_REDIRECTION
 ```

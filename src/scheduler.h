@@ -8,7 +8,7 @@ extern "C" {
 #endif
 
 struct kritic_runtime_t;
-struct kritic_attribute_t;
+typedef struct kritic_attribute_t_ kritic_attribute_t;
 typedef void (*kritic_test_fn)(void);
 
 typedef struct kritic_test_index_t

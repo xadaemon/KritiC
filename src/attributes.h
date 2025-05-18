@@ -25,7 +25,7 @@ typedef union
     kritic_attr_depends_on_t depends_on;
 } kritic_attr_union;
 
-typedef struct kritic_attribute_t
+typedef struct kritic_attribute_t_
 {
     kritic_attr_type_t type;
     kritic_attr_union attribute;

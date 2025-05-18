@@ -116,11 +116,11 @@ int kritic_run_all(void)
 
         if (kritic_state->test_state->skipped)
         {
-            ++kritic_state->skip_count;
+            kritic_state->skip_count += 1;
         }
         else if (kritic_state->test_state->asserts_failed > 0)
         {
-            ++kritic_state->fail_count;
+            kritic_state->fail_count += 1;
         }
 
         kritic_state->printers.post_test_printer(kritic_state);
@@ -139,8 +139,8 @@ int kritic_run_all(void)
 
 void kritic_assert_eq(
     const kritic_context_t* ctx,
-    uint64_t actual,
-    uint64_t expected,
+    int64_t actual,
+    int64_t expected,
     const char* actual_expr,
     const char* expected_expr,
     const kritic_assert_type_t assert_type
@@ -152,7 +152,7 @@ void kritic_assert_eq(
     const char* expected_s;
     union
     {
-        uint64_t i;
+        int64_t i;
         double f;
     } u_actual, u_expected;
 
@@ -205,8 +205,8 @@ void kritic_assert_eq(
     }
 
     kritic_runtime_t* kritic_state = kritic_get_runtime_state();
-    ++kritic_state->test_state->assert_count;
-    if (!passed) ++kritic_state->test_state->asserts_failed;
+    kritic_state->test_state->assert_count += 1;
+    if (!passed) kritic_state->test_state->asserts_failed += 1;
     kritic_state->printers.assert_printer(ctx, passed, actual, expected, actual_expr, expected_expr, assert_type);
 }
 
@@ -228,8 +228,8 @@ void kritic_skip_test(const kritic_context_t* ctx, const char* reason)
 void kritic_default_assert_printer(
     const kritic_context_t* ctx,
     bool passed,
-    uint64_t actual,
-    uint64_t expected,
+    int64_t actual,
+    int64_t expected,
     const char* actual_expr,
     const char* expected_expr,
     kritic_assert_type_t assert_type
@@ -242,7 +242,7 @@ void kritic_default_assert_printer(
     const char* expected_s = NULL;
     union
     {
-        uint64_t i;
+        int64_t i;
         double f;
     } u_actual, u_expected;
 

@@ -8,7 +8,7 @@ PLATFORM ?= linux
 # === Compiler flags ===
 DIAG_FLAGS    := -std=c99 -Wall -Wextra -Wpedantic -Werror -Wshadow -Wconversion \
                  -Wsign-conversion -Wcast-align -Wpointer-arith -Wformat=2 \
-				 -Wstrict-prototypes -Wundef -Wdouble-promotion
+				 -Wstrict-prototypes -Wundef -Wdouble-promotion -Wno-format
 OPT_FLAGS     := -O2 -fomit-frame-pointer -march=native
 DEBUG_FLAGS   := -g -fsanitize=address,undefined -fno-omit-frame-pointer -O0
 

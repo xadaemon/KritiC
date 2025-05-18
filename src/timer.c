@@ -10,14 +10,14 @@ void kritic_timer_start(kritic_timer_t* timer) {
     LARGE_INTEGER freq, counter;
     QueryPerformanceFrequency(&freq);
     QueryPerformanceCounter(&counter);
-    timer->frequency = (uint64_t) freq.QuadPart;
-    timer->start = (uint64_t) counter.QuadPart;
+    timer->frequency = (int64_t) freq.QuadPart;
+    timer->start = (int64_t) counter.QuadPart;
 }
 
-uint64_t kritic_timer_elapsed(const kritic_timer_t* timer) {
+int64_t kritic_timer_elapsed(const kritic_timer_t* timer) {
     LARGE_INTEGER counter;
     QueryPerformanceCounter(&counter);
-    uint64_t elapsed_counts = (uint64_t) counter.QuadPart - timer->start;
+    int64_t elapsed_counts = (int64_t) counter.QuadPart - timer->start;
     return (elapsed_counts * 1000000000ULL) / timer->frequency;
 }
 
@@ -28,11 +28,11 @@ void kritic_timer_start(kritic_timer_t* timer)
 {
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
-    timer->start_sec = (uint64_t)ts.tv_sec;
-    timer->start_nsec = (uint64_t)ts.tv_nsec;
+    timer->start_sec = (int64_t)ts.tv_sec;
+    timer->start_nsec = (int64_t)ts.tv_nsec;
 }
 
-uint64_t kritic_timer_elapsed(const kritic_timer_t* timer)
+int64_t kritic_timer_elapsed(const kritic_timer_t* timer)
 {
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
@@ -46,6 +46,6 @@ uint64_t kritic_timer_elapsed(const kritic_timer_t* timer)
         nsec_diff += 1000000000L;
     }
 
-    return (uint64_t)(sec_diff * 1000000000L + nsec_diff);
+    return (int64_t)(sec_diff * 1000000000L + nsec_diff);
 }
 #endif // POSIX
